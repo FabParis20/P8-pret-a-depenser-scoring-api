@@ -33,34 +33,28 @@ htmlcov/
 .tox/
 .nox/
 
-# Jupyter Notebook
+# Jupyter Notebook (checkpoints temporaires uniquement)
 .ipynb_checkpoints/
-*.ipynb_checkpoints
 
 # Logs
 *.log
 logs/
 *.out
 
-# MLflow artifacts (peuvent être volumineux)
+# MLflow artifacts locaux (peuvent être volumineux)
 mlruns/
 mlartifacts/
 
-# Données (si volumineuses, sinon commite un échantillon)
-data/*.csv
-data/*.xlsx
-data/*.parquet
+# Données de production volumineuses UNIQUEMENT
+# (garde les échantillons de référence)
 data/prod/*.csv
-# Garde data/train/ si échantillon petit pour reproductibilité
+data/prod/*.parquet
+# NE PAS ignorer data/train/ pour les données de référence
 
-# Modèles sérialisés (si trop lourds, utilise MLflow ou Git LFS)
-*.pkl
-*.joblib
-*.h5
-*.pth
-*.onnx
-models/*.pkl
-models/*.joblib
+# Modèles volumineux générés (garde le modèle final si <100MB)
+# Si ton modèle final est léger, retire ces lignes
+# *.pkl
+# *.joblib
 
 # Docker
 *.env.docker
