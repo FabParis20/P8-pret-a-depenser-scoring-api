@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environnements virtuels
+.venv/
+venv/
+ENV/
+env/
+.virtualenvs/
+
+# Variables d'environnement et secrets
+.env
+.env.local
+*.key
+*.pem
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Logs
+*.log
+logs/
+*.out
+
+# MLflow artifacts (peuvent être volumineux)
+mlruns/
+mlartifacts/
+
+# Données (si volumineuses, sinon commite un échantillon)
+data/*.csv
+data/*.xlsx
+data/*.parquet
+data/prod/*.csv
+# Garde data/train/ si échantillon petit pour reproductibilité
+
+# Modèles sérialisés (si trop lourds, utilise MLflow ou Git LFS)
+*.pkl
+*.joblib
+*.h5
+*.pth
+*.onnx
+models/*.pkl
+models/*.joblib
+
+# Docker
+*.env.docker
+
+# Divers
+*.bak
+*.tmp
+*.temp
+dist/
+build/
+*.egg-info/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Notes personnelles (optionnel, si tu veux garder des brouillons privés)
+# Ajoute dans .gitignore seulement si vraiment perso/brouillon
+journal_de_bord.md
