@@ -32,3 +32,20 @@ La documentation complète de l'architecture du projet est disponible dans [`doc
 5. **Monitoring** - Monitoring Data Drift
 
 ---
+
+## 🧪 Historique de développement
+
+### Phase 1 : API Dummy (Validation architecture - approche incrémentale)
+
+**Objectif** : Valider la structure de l'API avant intégration du modèle réel
+
+**Ce qui a été testé** :
+- ✅ Endpoint `/predict/{client_id}` fonctionnel
+- ✅ Modèle dummy avec distribution 90/10 (bon/mauvais payeur)
+- ✅ Gestion erreurs 404
+- ✅ Validation automatique FastAPI
+- ✅ Reproductibilité des prédictions (même client_id = même score)
+
+**Screenshots disponibles** : [`docs/screenshots/phase_dummy/`](docs/screenshots/phase_dummy/)
+
+**Migration vers modèle production** : [Date de migration]
