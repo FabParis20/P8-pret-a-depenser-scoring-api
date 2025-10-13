@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "p8_confirmez_vos_competences_mlops"
+version = "0.1.0"
+description = "Projet MLOps - Déploiement et monitoring d'un modèle de scoring"
+authors = ["Fabrice Vanspeybrock <fabrice.vanspeybrock@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pandas = "^2.2.3"
+numpy = "^2.2.0"
+scikit-learn = "^1.6.1"
+xgboost = "^3.0.2"
+catboost = "^1.2.8"
+shap = "^0.48.0"
+# API
+fastapi = "^0.116.1"
+uvicorn = {extras = ["standard"], version = "^0.37.0"}
+python-multipart = "^0.0.9"
+# MLOps essentials
+mlflow = "^2.18.0"
+# Notebooks & viz
+jupyterlab = "^4.4.2"
+ipykernel = "^6.29.5"
+matplotlib = "^3.10.3"
+seaborn = "^0.13.2"
+evidently = "^0.7.14"
+pillow = "^11.3.0"
+pydantic = {extras = ["email"], version = "^2.12.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
+pytest-cov = "^6.0.0"
+httpx = "^0.28.1"  # Pour tester FastAPI
+black = "^24.10.0"  # Formatage code (optionnel)
+ruff = "^0.8.4"  # Linter (optionnel)
+python-dotenv = "^1.0.0"  # Gérer les variables d'environnement (.env)
+pydantic = "^2.10.0"      # Validation de données (souvent utilisé avec FastAPI)
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"

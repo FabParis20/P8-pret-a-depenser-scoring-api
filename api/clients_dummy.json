@@ -1,0 +1,62 @@
+{
+  "100001": {
+    "age": 35,
+    "income": 45000,
+    "credit_amount": 15000,
+    "employment_years": 8
+  },
+  "100002": {
+    "age": 28,
+    "income": 32000,
+    "credit_amount": 8000,
+    "employment_years": 3
+  },
+  "100003": {
+    "age": 42,
+    "income": 65000,
+    "credit_amount": 25000,
+    "employment_years": 15
+  },
+  "100004": {
+    "age": 25,
+    "income": 28000,
+    "credit_amount": 5000,
+    "employment_years": 2
+  },
+  "100005": {
+    "age": 50,
+    "income": 80000,
+    "credit_amount": 35000,
+    "employment_years": 20
+  },
+  "100006": {
+    "age": 31,
+    "income": 38000,
+    "credit_amount": 12000,
+    "employment_years": 6
+  },
+  "100007": {
+    "age": 45,
+    "income": 55000,
+    "credit_amount": 20000,
+    "employment_years": 12
+  },
+  "100008": {
+    "age": 29,
+    "income": 30000,
+    "credit_amount": 7000,
+    "employment_years": 4
+  },
+  "100009": {
+    "age": 38,
+    "income": 48000,
+    "credit_amount": 18000,
+    "employment_years": 10
+  },
+  "100010": {
+    "age": 55,
+    "income": 72000,
+    "credit_amount": 30000,
+    "employment_years": 25
+  }
+}
