@@ -57,3 +57,56 @@ def dummy_model_predict(client_id: str, features: dict) -> float:
         score = random.uniform(0.10, 0.69)
     
     return round(score, 2)
+
+# Seuil de décision (dummy, sera 0.10 en production)
+THRESHOLD = 0.5
+
+@app.get("/predict/{client_id}", response_model=PredictionOut)
+async def predict(client_id: str):
+    """
+    Prédiction de scoring pour un client donné
+    
+    Args:
+        client_id: Identifiant du client (ex: "100001")
+        
+    Returns:
+        PredictionOut: Score de prédiction et décision
+        
+    Raises:
+        HTTPException 404: Si le client n'existe pas dans la base
+    """
+    # Vérification existence du client
+    if client_id not in clients_db:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Client {client_id} introuvable dans la base de données"
+        )
+    
+    # Récupération des features du client
+    client_features = clients_db[client_id]
+    
+    # Prédiction avec le modèle dummy
+    score = dummy_model_predict(client_id, client_features)
+    
+    # Décision selon le seuil
+    if score >= THRESHOLD:
+        decision = "Crédit refusé"
+    else:
+        decision = "Crédit accepté"
+    
+    return PredictionOut(
+        client_id=client_id,
+        score=score,
+        decision=decision
+    )
+
+@app.get("/")
+async def root():
+    """
+    Route racine - Vérification que l'API fonctionne
+    """
+    return {
+        "message": "API Scoring Crédit - Version Dummy",
+        "status": "operational",
+        "clients_disponibles": len(clients_db)
+    }
