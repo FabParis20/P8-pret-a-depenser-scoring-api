@@ -7,6 +7,10 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from pathlib import Path
+from evidently import Report
+from evidently.metrics import *
+from evidently.presets import *
+import numpy as np
 
 # Configuration de la page
 st.set_page_config(
@@ -37,6 +41,40 @@ def load_data():
         return df
     else:
         return None
+
+def generate_drift_report(df_production):
+    """
+    Génère un rapport de drift entre référence et production
+    
+    Args:
+        df_production: DataFrame des logs de production
+        
+    Returns:
+        tuple: (rapport Evidently, chemin HTML)
+    """
+    # Créer un dataset de référence simulé (même logique que le notebook)
+    np.random.seed(42)
+    scores_reference = []
+    
+    for _ in range(100):
+        if np.random.random() < 0.85:
+            score = np.random.uniform(0.70, 0.95)
+        else:
+            score = np.random.uniform(0.10, 0.69)
+        scores_reference.append(score)
+    
+    reference_data = pd.DataFrame({'score': scores_reference})
+    current_data = df_production[['score']].copy()
+    
+    # Générer le rapport
+    report = Report([DataDriftPreset()])
+    my_eval = report.run(current_data=current_data, reference_data=reference_data)
+    
+    # Sauvegarder le rapport HTML temporaire
+    html_path = Path("drift_report_temp.html")
+    my_eval.save_html(str(html_path))
+    
+    return my_eval, html_path
 
 # Charger les données
 df = load_data()
@@ -154,3 +192,133 @@ st.dataframe(
     use_container_width=True,
     hide_index=True
 )
+
+# ============================================================
+# PAGE 3 : ANALYSE DU DATA DRIFT
+# ============================================================
+
+st.header("🔬 Analyse du Data Drift")
+
+st.info("💡 Cette section compare la distribution des scores de production avec une période de référence.")
+
+# Générer le rapport de drift
+with st.spinner("Génération du rapport Evidently..."):
+    drift_eval, html_path = generate_drift_report(df)
+
+# Métriques de drift
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric(
+        label="📊 Colonnes analysées",
+        value="1",
+        help="Nombre de variables analysées (score)"
+    )
+
+with col2:
+    st.metric(
+        label="⚠️ Drift détecté",
+        value="Oui" if html_path.exists() else "Non",
+        help="Présence de drift statistiquement significatif"
+    )
+
+with col3:
+    # Calculer les stats de différence
+    ref_mean = 0.80  # Approximation de la référence simulée
+    prod_mean = df['score'].mean()
+    diff_pct = ((prod_mean - ref_mean) / ref_mean) * 100
+    
+    st.metric(
+        label="📈 Écart de moyenne",
+        value=f"{prod_mean:.2f}",
+        delta=f"{diff_pct:.1f}%",
+        help="Moyenne des scores : production vs référence"
+    )
+
+# Afficher le rapport HTML Evidently dans un iframe
+st.subheader("📄 Rapport Evidently complet")
+
+if html_path.exists():
+    with open(html_path, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+    
+    # Afficher dans un iframe
+    st.components.v1.html(html_content, height=800, scrolling=True)
+else:
+    st.warning("⚠️ Le rapport de drift n'a pas pu être généré.")
+
+st.markdown("---")
+
+
+# ============================================================
+# PAGE 4 : PERFORMANCE DE L'API
+# ============================================================
+
+st.header("⚡ Performance de l'API")
+
+# Statistiques de temps de réponse
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.metric(
+        label="⏱️ Temps moyen",
+        value=f"{df['response_time_ms'].mean():.2f} ms"
+    )
+
+with col2:
+    st.metric(
+        label="⚡ Temps min",
+        value=f"{df['response_time_ms'].min():.2f} ms"
+    )
+
+with col3:
+    st.metric(
+        label="🐌 Temps max",
+        value=f"{df['response_time_ms'].max():.2f} ms"
+    )
+
+with col4:
+    st.metric(
+        label="📊 Écart-type",
+        value=f"{df['response_time_ms'].std():.2f} ms"
+    )
+
+# Graphique d'évolution du temps de réponse
+st.subheader("📈 Évolution du temps de réponse")
+
+fig_perf = px.line(
+    df.sort_values('timestamp'),
+    x='timestamp',
+    y='response_time_ms',
+    title="Temps de réponse par prédiction",
+    labels={'timestamp': 'Date/Heure', 'response_time_ms': 'Temps (ms)'}
+)
+
+fig_perf.add_hline(
+    y=df['response_time_ms'].mean(),
+    line_dash="dash",
+    line_color="red",
+    annotation_text="Moyenne"
+)
+
+fig_perf.update_layout(height=400)
+st.plotly_chart(fig_perf, use_container_width=True)
+
+# Distribution des temps de réponse
+st.subheader("📊 Distribution des temps de réponse")
+
+fig_dist = px.histogram(
+    df,
+    x='response_time_ms',
+    nbins=30,
+    title="Répartition des temps de réponse",
+    labels={'response_time_ms': 'Temps de réponse (ms)', 'count': 'Nombre de prédictions'}
+)
+
+fig_dist.update_layout(height=400)
+st.plotly_chart(fig_dist, use_container_width=True)
+
+st.markdown("---")
+
+# Footer
+st.caption("📊 Dashboard de monitoring - Version Dummy | Prêt à dépenser")

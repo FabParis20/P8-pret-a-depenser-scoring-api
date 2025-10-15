@@ -140,7 +140,7 @@ Push sur main → Job Tests → Job Build Docker → ✅ Success
 - ✅ Build Docker : Image construite sans erreur
 - ✅ Logs détaillés : Consultables dans l'onglet Actions de GitHub
 
-**Dépôt GitHub** : [![CI Pipeline](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions/workflows/ci.yml/badge.svg)](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions/workflows/ci.yml)
+**Dépôt GitHub (badge)** : [![CI Pipeline](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions/workflows/ci.yml/badge.svg)](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions/workflows/ci.yml)
 
 **Bonnes pratiques appliquées** :
 - ✅ Séparation des responsabilités (2 jobs distincts)
@@ -151,46 +151,3 @@ Push sur main → Job Tests → Job Build Docker → ✅ Success
 
 **Accès au pipeline** : [Actions](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions)
 
-## 🚀 Démarrage rapide
-
-### Prérequis
-- Python 3.11+
-- Poetry 2.0+
-- Docker Desktop (pour la conteneurisation)
-
-### Installation locale (sans Docker)
-```bash
-# Cloner le dépôt
-git clone https://github.com/FabParis20/P8-pret-a-depenser-scoring-api.git
-cd P8-pret-a-depenser-scoring-api
-
-# Installer les dépendances
-poetry install
-
-# Lancer l'API
-poetry run uvicorn api.main:app --reload
-
-# Accéder à l'API : http://localhost:8000/docs
-```
-
-### Installation avec Docker (recommandé)
-```bash
-# Construire l'image
-docker build -t api-scoring .
-
-# Lancer le conteneur
-docker run -p 8000:8000 api-scoring
-
-# Accéder à l'API : http://localhost:8000/docs
-```
-
-### Tests
-```bash
-# Lancer les tests
-poetry run pytest tests/test_api.py -v
-
-# Avec couverture de code
-poetry run pytest tests/test_api.py -v --cov=api --cov-report=term-missing
-```
-
----
