@@ -11,6 +11,7 @@ from evidently import Report
 from evidently.metrics import *
 from evidently.presets import *
 import numpy as np
+import requests
 
 # Configuration de la page
 st.set_page_config(
@@ -22,6 +23,9 @@ st.set_page_config(
 # Titre principal
 st.title("📊 Dashboard de Monitoring - API Scoring Crédit")
 st.markdown("---")
+
+# Configuration de l'API
+API_URL = "http://localhost:8000/predict"
 
 # Chemin vers le fichier de logs
 LOGS_FILE = Path("data/prod/logs_production.csv")
@@ -75,6 +79,85 @@ def generate_drift_report(df_production):
     my_eval.save_html(str(html_path))
     
     return my_eval, html_path
+
+# ============================================================
+# PAGE 0 : DÉMO INTERACTIVE - TEST DU MODÈLE
+# ============================================================
+
+st.header("🎯 Démo Interactive - Test de Prédiction")
+
+st.info("💡 Testez l'API de scoring en direct ! Entrez un client_id pour obtenir une prédiction.")
+
+# Créer deux colonnes
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    # Champ de saisie pour le client_id
+    client_id = st.text_input(
+        "🆔 Numéro de client",
+        placeholder="Ex: 100001",
+        help="Entrez un client_id entre 100001 et 100010"
+    )
+    
+    # Bouton de prédiction
+    predict_button = st.button("🚀 Obtenir la prédiction", type="primary", use_container_width=True)
+
+with col2:
+    st.markdown("**Clients disponibles :**")
+    st.code("100001 à 100010")
+
+# Traiter la prédiction quand le bouton est cliqué
+if predict_button:
+    if not client_id:
+        st.error("❌ Veuillez entrer un client_id")
+    else:
+        # Appeler l'API
+        with st.spinner("⏳ Prédiction en cours..."):
+            try:
+                response = requests.get(f"{API_URL}/{client_id}", timeout=5)
+                
+                if response.status_code == 200:
+                    # Succès
+                    data = response.json()
+                    
+                    # Afficher le résultat dans une belle carte
+                    if data['decision'] == "Crédit accepté":
+                        st.success(f"✅ **{data['decision']}**")
+                    else:
+                        st.error(f"❌ **{data['decision']}**")
+                    
+                    # Afficher les détails
+                    col_a, col_b = st.columns(2)
+                    
+                    with col_a:
+                        st.metric(
+                            label="🎯 Score de prédiction",
+                            value=f"{data['score']:.2f}"
+                        )
+                    
+                    with col_b:
+                        st.metric(
+                            label="👤 Client ID",
+                            value=data['client_id']
+                        )
+                    
+                    # Message d'explication
+                    st.caption(f"💡 Score : {data['score']:.2f} (Seuil de décision : 0.5)")
+                    
+                elif response.status_code == 404:
+                    st.error(f"❌ Client {client_id} introuvable dans la base de données")
+                else:
+                    st.error(f"❌ Erreur API : {response.status_code}")
+                    
+            except requests.exceptions.ConnectionError:
+                st.error("❌ Impossible de se connecter à l'API. Vérifiez qu'elle est démarrée sur http://localhost:8000")
+            except requests.exceptions.Timeout:
+                st.error("❌ Timeout : L'API met trop de temps à répondre")
+            except Exception as e:
+                st.error(f"❌ Erreur inattendue : {str(e)}")
+
+st.markdown("---")
+st.markdown("")  # Espace
 
 # Charger les données
 df = load_data()
