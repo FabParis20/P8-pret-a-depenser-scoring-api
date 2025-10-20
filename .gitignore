@@ -45,17 +45,6 @@ logs/
 mlruns/
 mlartifacts/
 
-# Données de production volumineuses UNIQUEMENT
-# (garde les échantillons de référence)
-data/prod/*.csv
-data/prod/*.parquet
-# NE PAS ignorer data/train/ pour les données de référence
-
-# Modèles volumineux générés (garde le modèle final si <100MB)
-# Si ton modèle final est léger, retire ces lignes
-# *.pkl
-# *.joblib
-
 # Docker
 *.env.docker
 
@@ -84,13 +73,19 @@ data/prod/*.pkl
 data/prod/*.csv
 data/prod/*.parquet
 
+# Données d'entraînement
+data/train/*.pkl
+
 # Modèles entraînés
 models/*.pkl
 models/*.joblib
 models/*.h5
 
-# Autoriser les fichiers < 50MB
-!data/prod/X_sub.pkl
+# Autoriser les fichiers nécessaires aux tests (< 50MB)
+!data/prod/X_test_sample.pkl
+!data/prod/y_test_sample.pkl
+!data/train/X_train_sample.pkl
+!data/train/y_train_sample.pkl
 !models/model.pkl
 
 # Notebook de vérification interne (cuisine)
