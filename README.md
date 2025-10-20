@@ -151,3 +151,39 @@ Push sur main → Job Tests → Job Build Docker → ✅ Success
 
 **Accès au pipeline** : [Actions](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions)
 
+### Phase 4 : Préparation des données de production
+
+**Objectif** : Extraire des échantillons stratifiés depuis le Projet 6 pour la migration vers le modèle réel
+
+**Données préparées** :
+- ✅ **X_test_sample.pkl** : 2000 clients (10 MB) pour prédictions API
+- ✅ **X_train_sample.pkl** : 2000 clients (10 MB) pour référence drift
+- ✅ **813 features** par client (alignées avec le modèle champion)
+- ✅ **Distribution stratifiée** : 93% acceptés / 7% refusés
+- ✅ **Indices conservés** : Reproductibilité garantie via `test_indices.npy`
+
+**Méthode d'extraction** :
+- Source : `train_ready.parquet` (356k clients du Projet 6)
+- Split : Réutilisation des indices de test originaux (20% du dataset)
+- Échantillonnage : `StratifiedShuffleSplit` avec `random_state=54`
+- Validation : Taille < 50 MB pour compatibilité GitHub
+
+**Structure des données** :
+```
+data/
+├── prod/
+│   ├── X_test_sample.pkl      # Données pour prédictions
+│   └── y_test_sample.pkl      # Labels de validation
+└── train/
+    ├── X_train_sample.pkl     # Référence pour drift
+    └── y_train_sample.pkl     # Labels de référence
+```
+
+**Traçabilité** :
+- Notebook d'extraction : `prep_data_sample.ipynb` (Projet 6)
+- Hash des colonnes : Vérifié identique au Projet 6
+- Reproductibilité : Mêmes lignes que lors de l'entraînement du modèle champion
+
+**Prochaine étape** : Migration du modèle `champion_xgboost.pkl` et validation des prédictions
+
+---

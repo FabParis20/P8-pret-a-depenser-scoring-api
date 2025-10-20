@@ -74,6 +74,7 @@ Thumbs.db
 # Notes personnelles (optionnel, si tu veux garder des brouillons privés)
 # Ajoute dans .gitignore seulement si vraiment perso/brouillon
 journal_de_bord.md
+copie_journal_de_bord.md
 
 # Dossier apprentissage
 Apprentissage/
@@ -91,3 +92,6 @@ models/*.h5
 # Autoriser les fichiers < 50MB
 !data/prod/X_sub.pkl
 !models/model.pkl
+
+# Notebook de vérification interne (cuisine)
+notebooks/analyse_datasets.ipynb
