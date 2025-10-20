@@ -25,7 +25,7 @@ st.title("📊 Dashboard de Monitoring - API Scoring Crédit")
 st.markdown("---")
 
 # Configuration de l'API
-API_URL = "http://localhost:8000/predict"
+API_URL = "http://localhost:8000/v2/predict"
 
 # Chemin vers le fichier de logs
 LOGS_FILE = Path("data/prod/logs_production.csv")
@@ -95,16 +95,19 @@ with col1:
     # Champ de saisie pour le client_id
     client_id = st.text_input(
         "🆔 Numéro de client",
-        placeholder="Ex: 100001",
-        help="Entrez un client_id entre 100001 et 100010"
+        placeholder="Ex: 273460",
+        help="Exemple : 273460 (accepté) ou 321537 (refusé)"
     )
     
     # Bouton de prédiction
     predict_button = st.button("🚀 Obtenir la prédiction", type="primary", use_container_width=True)
 
 with col2:
-    st.markdown("**Clients disponibles :**")
-    st.code("100001 à 100010")
+    st.markdown("**Clients de test :**")
+    st.markdown("""
+    **✅ Acceptés :** 273460, 268316, 385708  
+    **🚫 Refusés :** 321537, 402448, 416841
+    """)
 
 # Traiter la prédiction quand le bouton est cliqué
 if predict_button:
@@ -142,7 +145,7 @@ if predict_button:
                         )
                     
                     # Message d'explication
-                    st.caption(f"💡 Score : {data['score']:.2f} (Seuil de décision : 0.5)")
+                    st.caption(f"💡 Score : {data['score']:.2f} (Seuil de décision : 0.10)")
                     
                 elif response.status_code == 404:
                     st.error(f"❌ Client {client_id} introuvable dans la base de données")
