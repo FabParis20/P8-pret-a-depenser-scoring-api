@@ -1,0 +1,37 @@
+======================================================================
+RESULTATS PROFILING cProfile
+======================================================================
+
+Client test : 273460
+
+TOP 20 FONCTIONS LES PLUS COUTEUSES (temps cumulatif)
+----------------------------------------------------------------------
+
+         1570415 function calls (1545825 primitive calls) in 2.368 seconds
+
+   Ordered by: cumulative time
+   List reduced from 3983 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.004    0.004    2.108    2.108 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\joblib\numpy_pickle.py:674(load)
+        1    0.000    0.000    2.103    2.103 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\joblib\numpy_pickle.py:613(_unpickle)
+        1    0.013    0.013    2.103    2.103 C:\Users\Fab\AppData\Local\Programs\Python\Python312\Lib\pickle.py:1179(load)
+    865/6    0.011    0.000    1.908    0.318 <frozen importlib._bootstrap>:1349(_find_and_load)
+    836/6    0.006    0.000    1.907    0.318 <frozen importlib._bootstrap>:1304(_find_and_load_unlocked)
+       13    0.000    0.000    1.904    0.146 C:\Users\Fab\AppData\Local\Programs\Python\Python312\Lib\pickle.py:1525(load_stack_global)
+       13    0.000    0.000    1.904    0.146 C:\Users\Fab\AppData\Local\Programs\Python\Python312\Lib\pickle.py:1564(find_class)
+   245/13    0.001    0.000    1.904    0.146 {built-in method builtins.__import__}
+    815/7    0.004    0.000    1.904    0.272 <frozen importlib._bootstrap>:911(_load_unlocked)
+    685/7    0.003    0.000    1.904    0.272 <frozen importlib._bootstrap_external>:989(exec_module)
+  1986/10    0.003    0.000    1.903    0.190 <frozen importlib._bootstrap>:480(_call_with_frames_removed)
+    993/7    0.044    0.000    1.895    0.271 {built-in method builtins.exec}
+        1    0.000    0.000    1.589    1.589 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\sklearn\__init__.py:1(<module>)
+        1    0.000    0.000    1.578    1.578 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\sklearn\base.py:1(<module>)
+        1    0.000    0.000    1.570    1.570 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\sklearn\utils\__init__.py:1(<module>)
+        1    0.000    0.000    1.544    1.544 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\sklearn\utils\_chunking.py:1(<module>)
+        1    0.000    0.000    1.541    1.541 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\sklearn\utils\_param_validation.py:1(<module>)
+        1    0.000    0.000    1.136    1.136 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\sklearn\utils\validation.py:1(<module>)
+        1    0.000    0.000    1.127    1.127 C:\Users\Fab\AppData\Local\pypoetry\Cache\virtualenvs\p8-confirmez-vos-competences-mlops-aoA6A9Ru-py3.12\Lib\site-packages\sklearn\utils\_array_api.py:1(<module>)
+  863/544    0.003    0.000    0.966    0.002 <frozen importlib._bootstrap>:1390(_handle_fromlist)
+
+
