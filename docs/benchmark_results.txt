@@ -1,0 +1,35 @@
+🧪 Benchmark sur 50 prédictions (client 273460)
+
+🔴 Benchmark VERSION NAIVE (rechargement modèle)...
+  Progression : 10/50
+  Progression : 20/50
+  Progression : 30/50
+  Progression : 40/50
+  Progression : 50/50
+
+🟢 Benchmark VERSION OPTIMISÉE (préchargement)...
+  Progression : 10/50
+  Progression : 20/50
+  Progression : 30/50
+  Progression : 40/50
+  Progression : 50/50
+
+======================================================================
+📊 RÉSULTATS BENCHMARK OPTIMISATIONS
+======================================================================
+
+Métrique                  Naive (ms)      Optimisé (ms)         Gain
+----------------------------------------------------------------------
+Temps moyen                   366.37         169.50        53.7%
+Temps médian                  331.27         164.55
+P95 (95e percentile)          377.86         197.77
+P99 (99e percentile)         1063.28         215.64
+Temps min                     316.31          99.19
+Temps max                    1710.44         218.43
+Écart-type                    192.74          19.28
+
+======================================================================
+✅ GAIN PERFORMANCE : 53.7% (facteur 2.2x)
+======================================================================
+
+💾 Résultats sauvegardés : C:\Users\Fab\Documents\P8-pret-a-depenser-scoring-api\docs\benchmark_results.txt
