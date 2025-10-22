@@ -68,6 +68,9 @@ copie_journal_de_bord.md
 # Dossier apprentissage
 Apprentissage/
 
+# Dossier livrables et démo
+livrables_et_demo/
+
 # Données volumineuses
 data/prod/*.pkl
 data/prod/*.csv
@@ -90,3 +93,9 @@ models/*.h5
 
 # Notebook de vérification interne (cuisine)
 notebooks/analyse_datasets.ipynb
+
+# Code pour structure 50 features
+provisoire_structureSQLite.py
+
+# Plan fin de projet
+plan_fin_projet.md

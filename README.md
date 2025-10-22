@@ -6,6 +6,129 @@
 **Date de début** : 08/10/2025  
 **Dépôt GitHub** : https://github.com/FabParis20/P8-pret-a-depenser-scoring-api
 
+**Dépôt GitHub (badge)** : [![CI Pipeline](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions/workflows/ci.yml/badge.svg)](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions/workflows/ci.yml)
+
+---
+
+## 📋 Table des matières
+
+- [⚡ Quick Start](#⚡-quick-start)
+  - [🔧 Installation](#🔧-installation)
+  - [🚀 Utilisation (API Locale)](#🚀-utilisation-api-locale)
+  - [🐳 Déploiement (Docker)](#🐳-déploiement-docker)
+  - [📊 Monitoring](#📊-monitoring)
+  - [⚡ Optimisations](#⚡-optimisations)
+  - [🧪 Tests](#🧪-tests)
+- [📋 Vue d'ensemble du projet](#📋-vue-densemble-du-projet)
+- [📐 Architecture](#📐-architecture)
+- [🧪 Historique de développement](#🧪-historique-de-développement)
+  - [Phase 1 : API Dummy (Validation architecture - approche incrémentale)](#phase-1--api-dummy-validation-architecture---approche-incrémentale)
+  - [Phase 2 : Conteneurisation Docker](#phase-2--conteneurisation-docker)
+  - [Phase 3 : Pipeline CI/CD (GitHub Actions)](#phase-3--pipeline-cicd-github-actions)
+  - [Phase 4 : Préparation des données de production](#phase-4--préparation-des-données-de-production)
+  - [Phase 5 : Migration vers modèle production](#phase-5--migration-vers-modèle-production)
+  - [Phase 6 : Optimisations performance](#phase-6--optimisations-performance)
+  - [Phase 7 : Déploiement Docker Hub](#phase-7--déploiement-docker-hub)
+  - [Phase 8 : Monitoring en production](#phase-8--monitoring-en-production)
+
+
+
+## ⚡ Quick Start
+
+Cette section détaille comment installer, utiliser, déployer et monitorer l'API de scoring de crédit.
+
+### 🔧 Installation
+
+1.  **Cloner le dépôt :**
+    ```bash
+    git clone [https://github.com/FabParis20/P8-pret-a-depenser-scoring-api.git](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api.git)
+    cd P8-pret-a-depenser-scoring-api
+    ```
+2.  **Installer les dépendances** (avec [Poetry](https://python-poetry.org/)) :
+    ```bash
+    poetry install
+    ```
+
+### 🚀 Utilisation (API Locale)
+
+1.  **Lancer le serveur API** (avec Uvicorn) :
+    L'API sera disponible sur `http://localhost:8000`.
+    ```bash
+    poetry run uvicorn api.main:app --reload
+    ```
+2.  **Consulter la documentation (Swagger) :**
+    Ouvrir dans le navigateur : [http://localhost:8000/docs](http://localhost:8000/docs)
+
+3.  **Exemple requête `curl` (Production v2) :**
+    Test avec un client de production (ID `273460`).
+    ```bash
+    curl -X 'GET' 'http://localhost:8000/v2/predict/273460' -H 'accept: application/json'
+    ```
+
+4.  **Exemple requête `curl` (Dummy v1) :**
+    Test avec un client dummy (ID `100001`).
+    ```bash
+    curl -X 'GET' 'http://localhost:8000/predict/100001' -H 'accept: application/json'
+    ```
+
+### 🐳 Déploiement (Docker)
+
+L'API est également disponible en tant qu'image Docker publique sur Docker Hub.
+
+1.  **Tirer (pull) l'image :**
+    ```bash
+    docker pull fabparis20/api-scoring-credit:latest
+    ```
+2.  **Lancer (run) le conteneur :**
+    L'API sera accessible sur `http://localhost:8000`.
+    ```bash
+    docker run -p 8000:8000 fabparis20/api-scoring-credit:latest
+    ```
+
+### 📊 Monitoring
+
+Le dashboard Streamlit permet de visualiser les logs et le data drift.
+**Prérequis :** L'API (Docker ou locale) doit être en cours d'exécution.
+
+1.  **Lancer le dashboard :**
+    ```bash
+    streamlit run app_monitoring.py
+    ```
+2.  **Accès aux rapports :**
+    * Le dashboard s'ouvre dans votre navigateur.
+    * Le dernier rapport de drift statique est disponible : [docs/drift_report_production.html](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/drift_report_production.html)
+
+### ⚡ Optimisations
+
+Optimisation via pré-chargement du modèle (FastAPI lifespan) pour éviter le rechargement à chaque requête.
+* **Temps moyen (v1 - naive)** : 366.37 ms
+* **Temps moyen (v2 - optimisé)** : 169.50 ms
+* **Gain de performance** : **53.7%** (facteur 2.2x)
+* **Rapport de benchmark** : [`docs/benchmark_results.txt`](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/benchmark_results.txt)
+* **Rapport de profiling** : [`docs/profiling_results.txt`](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/profiling_results.txt)
+
+### 🧪 Tests
+
+Les tests unitaires et d'intégration sont gérés via `pytest` et `pytest-cov` pour la couverture.
+
+1.  **Lancer la suite de tests** (depuis la racine du projet) :
+    ```bash
+    poetry run pytest
+    ```
+2.  **Générer le rapport de couverture :**
+    ```bash
+    poetry run pytest --cov=api
+    ```
+3.  **Tests implémentés** (dans `tests/test_api.py`) :
+    * `test_api_startup` : Vérifie la route racine (`/`).
+    * `test_predict_valid_client` : Vérifie l'endpoint dummy (v1) avec un client valide.
+    * `test_predict_invalid_client` : Vérifie l'erreur 404 (v1).
+    * `test_predict_reproducibility` : Vérifie la reproductibilité du score (v1).
+    * `test_v2_predict_valid_client` : Vérifie l'endpoint production (v2) avec un client valide.
+    * `test_v2_predict_threshold_logic` : Vérifie l'application du seuil métier (0.10).
+    * `test_v2_predict_invalid_client` : Vérifie l'erreur 404 (v2).
+    * `test_health_endpoint` : Vérifie l'endpoint de santé (`/health`).
+
 ---
 
 ## 📋 Vue d'ensemble du projet
@@ -63,6 +186,8 @@ La documentation complète de l'architecture du projet est disponible dans [`doc
 **Screenshots disponibles** : [`docs/screenshots/phase_dummy/`](docs/screenshots/phase_dummy/)
 
 **Migration vers modèle production** : [Date de migration]
+
+---
 
 ### Phase 2 : Conteneurisation Docker
 
@@ -151,6 +276,8 @@ Push sur main → Job Tests → Job Build Docker → ✅ Success
 
 **Accès au pipeline** : [Actions](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/actions)
 
+---
+
 ### Phase 4 : Préparation des données de production
 
 **Objectif** : Extraire des échantillons stratifiés depuis le Projet 6 pour la migration vers le modèle réel
@@ -184,6 +311,155 @@ data/
 - Hash des colonnes : Vérifié identique au Projet 6
 - Reproductibilité : Mêmes lignes que lors de l'entraînement du modèle champion
 
-**Prochaine étape** : Migration du modèle `champion_xgboost.pkl` et validation des prédictions
+---
+
+### Phase 5 : Migration vers modèle production
+
+**Objectif** : Remplacer le modèle dummy par le modèle XGBoost champion entraîné en Projet 6
+
+**Modèle intégré** :
+- ✅ **Fichier** : `models/model.pkl` (2.5 MB)
+- ✅ **Type** : Pipeline sklearn (ColumnTransformer + XGBoost)
+- ✅ **Preprocessing** : Automatique dans le pipeline
+- ✅ **Features** : 813 colonnes (alignées avec X_test_sample)
+- ✅ **Seuil métier** : 0.10 (optimisé Projet 6, pas 0.50 sklearn)
+
+**Nouvel endpoint production** :
+- ✅ Route : `/v2/predict/{client_id}`
+- ✅ Méthode : GET
+- ✅ Chargement modèle : Au démarrage API (lifespan FastAPI)
+- ✅ Logique de décision :
+  - Score >= 0.10 → **Crédit refusé**
+  - Score < 0.10 → **Crédit accepté**
+
+**Tests de validation** :
+- ✅ 8 tests automatisés (pytest)
+- ✅ Couverture : Tests modèle réel + endpoint v2
+- ✅ Clients de test : 10 clients réels (5 acceptés, 5 refusés)
+
+**Clients de démonstration** :
+| Type | Client ID | Score | Décision |
+|------|-----------|-------|----------|
+| ✅ Accepté | 273460 | 0.0395 | Crédit accepté |
+| ✅ Accepté | 268316 | 0.0257 | Crédit accepté |
+| 🚫 Refusé | 321537 | 0.1375 | Crédit refusé |
+| 🚫 Refusé | 402448 | 0.1793 | Crédit refusé |
+
+**Documentation complète** : [demo_clients.md](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/demo_clients.md)
+
+**Migration réussie** : Tag Git `v1.0.0`
 
 ---
+
+### Phase 6 : Optimisations performance
+
+**Objectif** : Identifier et corriger les goulots d'étranglement pour améliorer le temps de réponse API
+
+**Méthodologie appliquée** :
+1. Benchmark baseline (version naive)
+2. Profiling cProfile (identification goulots)
+3. Optimisation ciblée
+4. Mesure de l'impact
+
+**Optimisation principale : Préchargement modèle**
+- **Problème identifié** : Rechargement modèle (2.5 MB) à chaque requête
+- **Solution implémentée** : Lifespan FastAPI (chargement unique au démarrage)
+- **Impact mesuré** :
+  - Temps moyen : **366ms → 169ms**
+  - Gain performance : **53.7%** (facteur 2.2x)
+  - Stabilité : Écart-type réduit de 90% (192ms → 19ms)
+
+**Profiling cProfile** :
+- ✅ Goulot principal identifié : `joblib.load()` = 72% du temps total
+- ✅ Confirmation scientifique de l'optimisation prioritaire
+- ✅ Résultats détaillés : [profiling_results.txt](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/profiling_results.txt)
+
+**Benchmark complet** :
+- ✅ 50 itérations par version (naive vs optimisée)
+- ✅ Métriques P95, P99, écart-type mesurées
+- ✅ Résultats détaillés : [benchmark_results.txt](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/benchmark_results.txt)
+
+**Stratégies non retenues (justifiées)** :
+- ❌ **ONNX Runtime** : Gain estimé 10-20% insuffisant (temps actuel < 300ms acceptable UX)
+- ❌ **Quantification** : Scoring crédit = décisions sensibles, perte précision inacceptable
+- ❌ **GPU** : Modèle trop petit (2.5 MB), overhead transfert > gain calcul
+
+**Documentation complète** : [OPTIMISATIONS.md](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/OPTIMISATIONS.md)
+
+**Tags Git** : `v1.2.1` (optimisations validées)
+
+---
+
+### Phase 7 : Déploiement Docker Hub
+
+**Objectif** : Automatiser la publication de l'image Docker sur Docker Hub via le pipeline CI/CD
+
+**Configuration implémentée** :
+- ✅ Repository Docker Hub : `fabparis20/api-scoring-credit`
+- ✅ Secrets GitHub configurés : `DOCKER_USERNAME` + `DOCKER_PASSWORD`
+- ✅ Push automatique sur branche `main` uniquement
+- ✅ Tag image : `latest`
+
+**Pipeline CI/CD étendu** :
+```
+Push sur main → Tests → Build Docker → Push Docker Hub → ✅ Image publique
+                  ↓
+                 ❌ Échec → STOP
+```
+
+**Workflow mis à jour** :
+1. Job Tests : Pytest avec couverture
+2. Job Build : Construction image Docker
+3. Job Push : Publication Docker Hub (condition : `if: github.ref == 'refs/heads/main'`)
+
+**Image disponible publiquement** :
+```bash
+docker pull fabparis20/api-scoring-credit:latest
+```
+
+**Avantages déploiement** :
+- ✅ Déploiement automatisé (zéro intervention manuelle)
+- ✅ Image toujours à jour avec la branche main
+- ✅ Reproductibilité garantie
+- ✅ Prêt pour déploiement cloud (AWS ECS, GCP Cloud Run, Azure Container Instances)
+
+**Accès Docker Hub** : [fabparis20/api-scoring-credit](https://hub.docker.com/r/fabparis20/api-scoring-credit)
+
+**Tags Git** : `v1.3.0` (déploiement automatisé validé)
+
+---
+
+### Phase 8 : Monitoring en production
+
+**Objectif** : Surveiller le modèle en production (data drift, logs, performance)
+
+**Analyse Data Drift (Evidently AI)** :
+- ✅ Méthodologie : Comparaison 50 features critiques (top importance XGBoost)
+- ✅ Référence : X_train_sample (2000 clients)
+- ✅ Production : X_test_sample (2000 clients)
+- ✅ Résultat : Pas de drift significatif (normal : train/test même source)
+- ✅ Surveillance production : Analyse mensuelle planifiée
+
+**Livrables drift** :
+- Notebook d'analyse : [analyse_drift.ipynb](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/notebooks/analyse_drift.ipynb)
+- Rapport HTML interactif : [drift_report_production.html](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/drift_report_production.html)
+
+**Logs de production** :
+- ✅ Fichier : `data/prod/logs_production.csv`
+- ✅ Structure : timestamp, client_id, score, decision, response_time_ms
+- ✅ Stratégie : CSV pour POC, migration PostgreSQL si > 100k prédictions/mois
+- ✅ Screenshot : [stockage_logs_csv.png](https://github.com/FabParis20/P8-pret-a-depenser-scoring-api/blob/main/docs/screenshots/stockage_logs_csv.png)
+
+**Dashboard Streamlit** :
+- ✅ Démo interactive (test API en temps réel)
+- ✅ Vue d'ensemble (KPIs, métriques)
+- ✅ Distribution des scores
+- ✅ Analyse Data Drift (rapport Evidently intégré)
+- ✅ Performance API (latence, temps de réponse)
+
+**Lancement dashboard** :
+```bash
+streamlit run app_monitoring.py
+```
+
+**Tags Git** : `v1.2.0` (monitoring complet validé)
